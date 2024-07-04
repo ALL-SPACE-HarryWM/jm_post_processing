@@ -33,10 +33,13 @@ def load__measFiles(file_path):
                 meas_info.append(row)
             index_start = [index for index in range(len(meas_info)) if 'barcodes' in meas_info[index]][0] + 2
             meas_info = meas_info[0:index_start]
-            meas_array = np.genfromtxt(file_path, delimiter=',', skip_header=index_start)
-            meas_array_gain = meas_array[:, ::2]
-            meas_array_phase = meas_array[:, 1:][:, ::2]
-            meas_frequencies = np.array(meas_info[index_start - 1])[::2].astype(float)
+            meas_array = pd.read_csv(file_path, delimiter=',',encoding='cp1252',skiprows=index_start, header=None)
+
+            meas_array_gain = meas_array.iloc[:,::2]
+
+            meas_array_phase = meas_array.iloc[:,1::2]
+
+            meas_frequencies = pd.DataFrame(data=pd.to_numeric(meas_info[index_start-1][::2]))
 
     # meas_params
     for i in range(len(meas_info) - 1):
@@ -124,7 +127,7 @@ def plot_tlm_map(array_in, title, cmin, cmax, cstp, f_set, plot_no, tick_step, d
             axs[plot_no].plot(x_rfic, y_rfic, 'm-', linewidth=1.0, alpha=0.7)
 
     # select the column of data
-    col = np.argmin((meas_frequencies - f_set) ** 2)
+    col = pd.Series.argmin((meas_frequencies - f_set)** 2 )
     Z = array_in[:, col]
     np.median(Z)
     # odd ports

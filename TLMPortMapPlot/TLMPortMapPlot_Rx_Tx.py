@@ -136,7 +136,7 @@ for gain_phase in ['gain', 'phase']:
                     # for measFile in measFiles:
                     (meas_info, meas_params, meas_array, meas_frequencies, meas_array_gain, meas_array_phase,
                      paramName, i) = load__measFiles(measFile)
-                    col = np.argmin((meas_frequencies - float(freq_set)) ** 2)
+                    col = pd.Series.argmin((meas_frequencies - float(freq_set)) ** 2)
                     axs[2].plot(np.linspace(1, len(meas_array), num=len(meas_array)), meas_array_av[:, col])
                     axs[2].set_xlabel('port')
                     axs[2].set_ylabel(f'{gain_phase}')
